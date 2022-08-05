@@ -17,11 +17,15 @@
     if (containSymbols) {
       base += symbols;
     }
-    password = Array.from(crypto.getRandomValues(new Uint32Array(length)))
-      .map((n) => {
-        return base[n % base.length];
-      })
-      .join("");
+    let maxN = (2 ** 32) - 1 - ((2 ** 32) - 1) % base.length;
+    password = "";
+    for (let i = 0; i < length; i++) {
+      let n = 0;
+      do {
+        n = Number(crypto.getRandomValues(new Uint32Array(1)));
+      } while (n >= maxN)
+      password += base[n % base.length]
+    }
     console.log(password);
   };
 
